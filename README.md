@@ -3,8 +3,6 @@
 A single-page personal portfolio with a circuit-board / schematic visual theme,
 reflecting a background in embedded systems.
  
-**Live site:** 
- 
 ## Contact
  
 - Email: anhar0iu@gmail.com
