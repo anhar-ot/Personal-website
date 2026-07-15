@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anhar Alotaibi — Computer Engineering Portfolio</title>
+<meta name="description" content="Personal portfolio of Anhar Alotaibi, Computer Engineering student specializing in embedded systems at Qassim University.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #08142b;
+    --bg-panel: #0d1e3f;
+    --bg-panel-2: #112549;
+    --ink: #eef2fb;
+    --ink-dim: #a9b8d6;
+    --ink-faint: #6c7ea3;
+    --copper: #c8834e;
+    --copper-bright: #e8a768;
+    --cyan: #5ec8ff;
+    --spark: #bfe3ff;
+    --line: rgba(238,242,251,0.10);
+    --line-strong: rgba(238,242,251,0.20);
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
+    --sans: 'Inter', system-ui, sans-serif;
+    --maxw: 1040px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
+  }
+
+  body{
+    margin:0;
+    background:
+      radial-gradient(ellipse at top left, rgba(94,200,255,0.08), transparent 45%),
+      radial-gradient(ellipse at bottom right, rgba(200,131,78,0.05), transparent 50%),
+      var(--bg);
+    color:var(--ink);
+    font-family:var(--sans);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+  /* faint circuit grid texture */
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:44px 44px;
+    opacity:0.3;
+    pointer-events:none;
+    z-index:0;
+  }
+
+  /* ---------- Floating electric / network / security field ---------- */
+  .field{
+    position:fixed;
+    inset:0;
+    z-index:0;
+    pointer-events:none;
+    overflow:hidden;
+  }
+  .drift{
+    position:absolute;
+    color:var(--spark);
+    opacity:0.5;
+    filter:drop-shadow(0 0 6px rgba(191,227,255,0.35));
+    animation:floaty 14s ease-in-out infinite, spark 5s ease-in-out infinite;
+  }
+  .drift svg{display:block; width:100%; height:100%;}
+  .drift.copper{color:var(--copper-bright); filter:drop-shadow(0 0 6px rgba(232,167,104,0.3));}
+
+  @keyframes floaty{
+    0%,100%{ transform:translate(0,0) rotate(0deg); }
+    50%{ transform:translate(var(--dx,14px), var(--dy,-18px)) rotate(var(--dr,4deg)); }
+  }
+  @keyframes spark{
+    0%,100%{ opacity:0.18; }
+    45%{ opacity:0.18; }
+    50%{ opacity:0.9; }
+    55%{ opacity:0.3; }
+    78%{ opacity:0.55; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .drift{ animation:none; opacity:0.35; }
+  }
+  @media (max-width:720px){
+    .drift{ opacity:0.32; }
+  }
+
+  a{color:var(--copper-bright);}
+  a:focus-visible, button:focus-visible{
+    outline:2px solid var(--cyan);
+    outline-offset:3px;
+    border-radius:2px;
+  }
+
+  .mono{font-family:var(--mono);}
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:0.72rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--ink-faint);
+    display:flex;
+    align-items:center;
+    gap:0.6em;
+  }
+  .eyebrow::before{
+    content:"";
+    width:8px; height:8px;
+    border:1px solid var(--copper);
+    border-radius:1px;
+    display:inline-block;
+  }
+
+  /* ---------- Nav ---------- */
+  nav{
+    position:sticky; top:0; z-index:20;
+    background:rgba(10,31,22,0.85);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{
+    max-width:var(--maxw);
+    margin:0 auto;
+    padding:14px 24px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .nav-brand{
+    font-family:var(--mono);
+    font-weight:700;
+    font-size:0.95rem;
+    color:var(--ink);
+    text-decoration:none;
+    letter-spacing:0.02em;
+  }
+  .nav-brand span{color:var(--copper-bright);}
+  .nav-links{
+    display:flex;
+    gap:4px;
+    list-style:none;
+    margin:0; padding:0;
+  }
+  .nav-links a{
+    font-family:var(--mono);
+    font-size:0.78rem;
+    color:var(--ink-dim);
+    text-decoration:none;
+    padding:8px 12px;
+    border-radius:3px;
+    transition:color 0.15s ease, background 0.15s ease;
+  }
+  .nav-links a:hover{color:var(--ink); background:rgba(237,234,224,0.06);}
+  .nav-links .pin{color:var(--copper);}
+
+  /* ---------- Schematic rail (signature element) ---------- */
+  .schematic{
+    max-width:var(--maxw);
+    margin:0 auto;
+    position:relative;
+    padding-left:64px;
+  }
+  .rail{
+    position:absolute;
+    top:0; bottom:0; left:22px;
+    width:2px;
+    background:var(--line);
+    z-index:1;
+  }
+  .rail-fill{
+    position:absolute;
+    top:0; left:0;
+    width:100%;
+    height:0%;
+    background:linear-gradient(var(--cyan), var(--copper-bright));
+    transition:height 0.1s linear;
+  }
+  .pad{
+    position:absolute;
+    left:22px;
+    top:0;
+    transform:translate(-50%,6px);
+    width:14px; height:14px;
+    border-radius:50%;
+    background:var(--bg);
+    border:2px solid var(--copper);
+    z-index:2;
+    transition:border-color 0.4s ease, box-shadow 0.4s ease;
+  }
+  .pad.lit{
+    border-color:var(--cyan);
+    box-shadow:0 0 10px rgba(85,214,196,0.6);
+  }
+  .designator{
+    position:absolute;
+    left:44px; top:0;
+    transform:translateY(2px);
+    font-family:var(--mono);
+    font-size:0.68rem;
+    color:var(--ink-faint);
+    letter-spacing:0.08em;
+    white-space:nowrap;
+  }
+
+  section{
+    position:relative;
+    padding:64px 24px 24px 24px;
+    scroll-margin-top:70px;
+  }
+  section h2{
+    font-family:var(--sans);
+    font-size:1.7rem;
+    font-weight:700;
+    margin:10px 0 18px 0;
+    color:var(--ink);
+  }
+
+  /* ---------- Hero ---------- */
+  #hero{padding-top:88px; padding-bottom:56px;}
+  .hero-name{
+    font-family:var(--sans);
+    font-weight:700;
+    font-size:clamp(2.4rem, 6vw, 4.2rem);
+    line-height:1.02;
+    margin:14px 0 8px 0;
+    letter-spacing:-0.02em;
+  }
+  .hero-role{
+    font-family:var(--mono);
+    color:var(--copper-bright);
+    font-size:1.05rem;
+    margin-bottom:22px;
+  }
+  .hero-tagline{
+    max-width:56ch;
+    color:var(--ink-dim);
+    font-size:1.08rem;
+    margin-bottom:34px;
+  }
+  .hero-ctas{display:flex; gap:14px; flex-wrap:wrap;}
+  .btn{
+    font-family:var(--mono);
+    font-size:0.82rem;
+    text-decoration:none;
+    padding:12px 20px;
+    border-radius:3px;
+    letter-spacing:0.02em;
+    transition:transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+    display:inline-block;
+  }
+  .btn-primary{
+    background:var(--copper);
+    color:#0a1f16;
+    font-weight:700;
+    border:1px solid var(--copper);
+  }
+  .btn-primary:hover{background:var(--copper-bright); border-color:var(--copper-bright); transform:translateY(-1px);}
+  .btn-ghost{
+    color:var(--ink);
+    border:1px solid var(--line-strong);
+  }
+  .btn-ghost:hover{border-color:var(--cyan); color:var(--cyan); transform:translateY(-1px);}
+
+  /* ---------- About ---------- */
+  #about p{color:var(--ink-dim); max-width:64ch; margin:0 0 14px 0;}
+  #about strong{color:var(--ink); font-weight:600;}
+
+  /* ---------- Skills / BOM table ---------- */
+  .bom{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:6px;
+    font-size:0.92rem;
+  }
+  .bom caption{
+    text-align:left;
+    font-family:var(--mono);
+    font-size:0.7rem;
+    color:var(--ink-faint);
+    letter-spacing:0.08em;
+    margin-bottom:10px;
+  }
+  .bom th{
+    text-align:left;
+    font-family:var(--mono);
+    font-size:0.68rem;
+    letter-spacing:0.08em;
+    color:var(--ink-faint);
+    text-transform:uppercase;
+    padding:8px 12px;
+    border-bottom:1px solid var(--line-strong);
+  }
+  .bom td{
+    padding:12px;
+    border-bottom:1px solid var(--line);
+    color:var(--ink-dim);
+    vertical-align:top;
+  }
+  .bom td.desig{
+    font-family:var(--mono);
+    color:var(--copper-bright);
+    white-space:nowrap;
+  }
+  .bom td.item{color:var(--ink); font-weight:500;}
+  .bom tr:hover td{background:rgba(237,234,224,0.03);}
+
+  /* ---------- Projects ---------- */
+  .projects-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(280px,1fr));
+    gap:16px;
+    margin-top:8px;
+  }
+  .card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:20px;
+    position:relative;
+    overflow:hidden;
+    transition:border-color 0.2s ease, transform 0.2s ease;
+  }
+  .card::before{
+    content:"";
+    position:absolute; top:0; left:0; right:0; height:2px;
+    background:linear-gradient(90deg, var(--copper), var(--cyan));
+    opacity:0.6;
+  }
+  .card:hover{border-color:var(--line-strong); transform:translateY(-2px);}
+  .card-tag{
+    font-family:var(--mono);
+    font-size:0.68rem;
+    letter-spacing:0.08em;
+    color:var(--cyan);
+    text-transform:uppercase;
+    margin-bottom:10px;
+    display:block;
+  }
+  .card h3{margin:0 0 8px 0; font-size:1.08rem; color:var(--ink);}
+  .card p{margin:0 0 12px 0; color:var(--ink-dim); font-size:0.92rem;}
+  .card-link{
+    font-family:var(--mono);
+    font-size:0.78rem;
+    text-decoration:none;
+    color:var(--copper-bright);
+  }
+  .card-link:hover{color:var(--cyan);}
+  .stack{
+    display:flex; flex-wrap:wrap; gap:6px;
+    margin-bottom:12px;
+  }
+  .chip{
+    font-family:var(--mono);
+    font-size:0.68rem;
+    color:var(--ink-faint);
+    border:1px solid var(--line-strong);
+    border-radius:3px;
+    padding:3px 8px;
+  }
+
+  /* ---------- Education ---------- */
+  .edu-item{
+    display:flex; justify-content:space-between; gap:16px;
+    padding:16px 0;
+    border-bottom:1px solid var(--line);
+    flex-wrap:wrap;
+  }
+  .edu-item:last-child{border-bottom:none;}
+  .edu-item h3{margin:0 0 4px 0; font-size:1.02rem; color:var(--ink);}
+  .edu-item p{margin:0; color:var(--ink-dim); font-size:0.9rem;}
+  .edu-meta{
+    font-family:var(--mono);
+    font-size:0.78rem;
+    color:var(--ink-faint);
+    white-space:nowrap;
+  }
+
+  /* ---------- Contact / Footer ---------- */
+  footer{
+    padding:64px 24px 48px 24px;
+    max-width:var(--maxw);
+    margin:0 auto;
+    border-top:1px solid var(--line);
+    margin-top:24px;
+  }
+  .contact-grid{
+    display:flex; gap:14px; flex-wrap:wrap;
+    margin-top:18px;
+  }
+  .pad-link{
+    font-family:var(--mono);
+    font-size:0.85rem;
+    color:var(--ink);
+    text-decoration:none;
+    border:1px solid var(--line-strong);
+    border-radius:4px;
+    padding:12px 18px;
+    display:flex; align-items:center; gap:10px;
+    transition:border-color 0.15s ease, color 0.15s ease;
+  }
+  .pad-link:hover{border-color:var(--cyan); color:var(--cyan);}
+  .pad-link::before{
+    content:"";
+    width:9px; height:9px;
+    border-radius:50%;
+    background:var(--copper);
+    flex-shrink:0;
+  }
+  .footer-note{
+    margin-top:40px;
+    font-family:var(--mono);
+    font-size:0.72rem;
+    color:var(--ink-faint);
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width:720px){
+    .nav-links{display:none;}
+    .schematic{padding-left:40px;}
+    .rail{left:14px;}
+    .pad{left:14px;}
+    .designator{left:30px; font-size:0.62rem;}
+    section{padding:48px 16px 16px 16px;}
+    .bom{font-size:0.82rem;}
+    .bom td, .bom th{padding:8px 6px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="field" aria-hidden="true">
+
+  <div class="drift" style="top:8%; left:6%; width:54px; height:54px; --dx:16px; --dy:-20px; --dr:6deg; animation-delay:-1s, -0.5s;">
+    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.4">
+      <ellipse cx="32" cy="32" rx="26" ry="10" />
+      <ellipse cx="32" cy="32" rx="26" ry="10" transform="rotate(60 32 32)" />
+      <ellipse cx="32" cy="32" rx="26" ry="10" transform="rotate(120 32 32)" />
+      <circle cx="32" cy="32" r="3" fill="currentColor" stroke="none" />
+    </svg>
+  </div>
+
+  <div class="drift copper" style="top:16%; right:9%; width:42px; height:42px; --dx:-12px; --dy:16px; --dr:-5deg; animation-delay:-3s, -2s;">
+    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.6">
+      <rect x="18" y="26" width="28" height="24" rx="3" />
+      <path d="M24 26v-6a8 8 0 0 1 16 0v6" />
+      <circle cx="32" cy="38" r="2.5" fill="currentColor" stroke="none" />
+    </svg>
+  </div>
+
+  <div class="drift" style="top:32%; left:2%; width:60px; height:60px; --dx:20px; --dy:10px; --dr:8deg; animation-delay:-5s, -1s;">
+    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.4">
+      <circle cx="14" cy="18" r="4" />
+      <circle cx="50" cy="14" r="4" />
+      <circle cx="46" cy="48" r="4" />
+      <circle cx="14" cy="46" r="4" />
+      <path d="M17 19 L46 15 M17 21 L44 46 M18 44 L46 46 M16 21 L16 43" />
+    </svg>
+  </div>
+
+  <div class="drift" style="top:12%; left:44%; width:34px; height:34px; --dx:10px; --dy:-14px; --dr:10deg; animation-delay:-2.5s, -4s;">
+    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.8">
+      <path d="M35 4 12 36h16l-3 24 25-34H34l1-22Z" stroke-linejoin="round" />
+    </svg>
+  </div>
+
+  <div class="drift copper" style="top:52%; right:4%; width:50px; height:50px; --dx:-16px; --dy:-14px; --dr:-6deg; animation-delay:-6s, -3s;">
+    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.4">
+      <path d="M8 22a34 22 0 0 1 48 0" />
+      <path d="M16 30a24 15 0 0 1 32 0" />
+      <path d="M24 38a13 8 0 0 1 16 0" />
+      <circle cx="32" cy="46" r="3" fill="currentColor" stroke="none" />
+    </svg>
+  </div>
+
+  <div class="drift" style="top:70%; left:8%; width:46px; height:46px; --dx:14px; --dy:16px; --dr:5deg; animation-delay:-0.5s, -5.5s;">
+    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.6">
+      <path d="M32 6 8 18v14c0 15 10 25 24 26 14-1 24-11 24-26V18Z" stroke-linejoin="round" />
+      <path d="M23 32l6 6 12-13" stroke-linejoin="round" stroke-linecap="round" />
+    </svg>
+  </div>
+
+  <div class="drift" style="top:66%; right:14%; width:38px; height:38px; --dx:-10px; --dy:12px; --dr:-8deg; animation-delay:-4.5s, -0.8s;">
+    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.4">
+      <ellipse cx="32" cy="32" rx="24" ry="9" />
+      <ellipse cx="32" cy="32" rx="24" ry="9" transform="rotate(60 32 32)" />
+      <ellipse cx="32" cy="32" rx="24" ry="9" transform="rotate(120 32 32)" />
+      <circle cx="32" cy="32" r="2.6" fill="currentColor" stroke="none" />
+    </svg>
+  </div>
+
+  <div class="drift copper" style="top:84%; left:36%; width:40px; height:40px; --dx:12px; --dy:-10px; --dr:6deg; animation-delay:-2s, -6s;">
+    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5">
+      <rect x="20" y="20" width="24" height="24" rx="2" />
+      <path d="M24 20v-6M32 20v-6M40 20v-6M24 44v6M32 44v6M40 44v6M20 24h-6M20 32h-6M20 40h-6M44 24h6M44 32h6M44 40h6" />
+    </svg>
+  </div>
+
+  <div class="drift" style="top:40%; left:22%; width:26px; height:26px; --dx:-8px; --dy:-12px; --dr:-10deg; animation-delay:-1.5s, -2.2s;">
+    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M35 4 12 36h16l-3 24 25-34H34l1-22Z" stroke-linejoin="round" />
+    </svg>
+  </div>
+
+  <div class="drift" style="top:90%; right:30%; width:30px; height:30px; --dx:10px; --dy:14px; --dr:8deg; animation-delay:-5.2s, -1.2s;">
+    <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.6">
+      <circle cx="16" cy="16" r="3.5" />
+      <circle cx="48" cy="16" r="3.5" />
+      <circle cx="32" cy="46" r="3.5" />
+      <path d="M18 18 L46 18 M17 19 L31 44 M47 19 L33 44" />
+    </svg>
+  </div>
+
+</div>
+
+<nav>
+  <div class="nav-inner">
+    <a href="#hero" class="nav-brand">AN<span>::</span>HAR</a>
+    <ul class="nav-links">
+      <li><a href="#about"><span class="pin">&gt;</span> about</a></li>
+      <li><a href="#skills"><span class="pin">&gt;</span> skills</a></li>
+      <li><a href="#projects"><span class="pin">&gt;</span> projects</a></li>
+      <li><a href="#education"><span class="pin">&gt;</span> education</a></li>
+      <li><a href="#contact"><span class="pin">&gt;</span> contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="schematic">
+  <div class="rail"><div class="rail-fill" id="railFill"></div></div>
+  <div class="pad" data-pad></div>
+
+  <section id="hero">
+    <span class="designator" data-designator>U0 — TOP</span>
+    <p class="eyebrow">Reference Designator // Portfolio-01</p>
+    <h1 class="hero-name">Anhar Alotaibi</h1>
+    <p class="hero-role">Computer Engineering Student — Qassim University</p>
+    <p class="hero-tagline">
+      Final-year Computer Engineering student with experience across electrical fundamentals,
+      electronics, microprocessors, and microcontrollers.
+    </p>
+  </section>
+
+  <div class="pad" data-pad></div>
+  <section id="about">
+    <span class="designator" data-designator>U1 — ABOUT</span>
+    <h2>About</h2>
+    <p>
+      I'm a <strong>final-year Computer Engineering student at Qassim University</strong>,
+      specializing in <strong>embedded systems</strong>. My experience has been built step by
+      step — starting with electrical fundamentals, then electronics, then microprocessors, and
+      most recently microcontrollers.
+    </p>
+    <p>
+      I'm also interested in <strong>networks</strong> and <strong>security</strong>.
+    </p>
+  </section>
+
+  <div class="pad" data-pad></div>
+  <section id="skills">
+    <span class="designator" data-designator>U2 — SKILLS</span>
+    <h2>Skills</h2>
+    <table class="bom">
+      <caption>Bill of Materials — capabilities by category</caption>
+      <thead>
+        <tr><th>Ref</th><th>Component</th><th>Category</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="desig">U1</td><td class="item">Embedded C &amp; ATmega328P firmware</td><td>Hardware &amp; Firmware</td></tr>
+        <tr><td class="desig">U2</td><td class="item">Circuit simulation (Proteus)</td><td>Hardware &amp; Firmware</td></tr>
+        <tr><td class="desig">R1</td><td class="item">Network security fundamentals</td><td>Security</td></tr>
+        <tr><td class="desig">R2</td><td class="item">ARP spoofing &amp; packet analysis</td><td>Security</td></tr>
+        <tr><td class="desig">C1</td><td class="item">Routing, link-layer &amp; LAN protocols</td><td>Networking</td></tr>
+        <tr><td class="desig">C2</td><td class="item">SDN, BGP, OSPF fundamentals</td><td>Networking</td></tr>
+        <tr><td class="desig">Q1</td><td class="item">GPU–CPU interfacing, TMR, fault tolerance</td><td>Systems Engineering</td></tr>
+        <tr><td class="desig">Q2</td><td class="item">Technical writing &amp; IEEE documentation</td><td>Documentation</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <div class="pad" data-pad></div>
+  <section id="projects">
+    <span class="designator" data-designator>U3 — PROJECTS</span>
+    <h2>Projects</h2>
+    <div class="projects-grid">
+
+      <div class="card">
+        <span class="card-tag">Embedded Systems</span>
+        <h3>Intelligent Temperature Control System</h3>
+        <div class="stack">
+          <span class="chip">ATmega328P</span>
+          <span class="chip">Proteus</span>
+          <span class="chip">LM35</span>
+          <span class="chip">C</span>
+        </div>
+        <p>
+          A simulated temperature control system with LCD readout, LM35 sensor, DC fan, and
+          heating element. Includes a self-initiated dead-zone control feature added as an
+          engineering improvement beyond the base requirements, documented in a full C
+          implementation and nine-section report.
+        </p>
+      </div>
+
+      <div class="card">
+        <span class="card-tag">Network Security</span>
+        <h3>Mamba Ransomware Case Study</h3>
+        <div class="stack">
+          <span class="chip">Network Security</span>
+          <span class="chip">Documentation</span>
+        </div>
+        <p>
+          Analysis of the 2017 Mamba ransomware attack, produced as a written report and an
+          accompanying HTML infographic, examining the attack chain against standard techniques
+          like ARP spoofing and packet sniffing.
+        </p>
+      </div>
+
+      <div class="card">
+        <span class="card-tag">Networking</span>
+        <h3>DNS Evolution</h3>
+        <div class="stack">
+          <span class="chip">Group Presentation</span>
+          <span class="chip">IEEE Citations</span>
+        </div>
+        <p>
+          A group presentation tracing the history of DNS. Responsible for the introduction and
+          DNS timeline sections, delivered as a formatted slide deck under a strict 400-word
+          content constraint.
+        </p>
+      </div>
+
+      <div class="card">
+        <span class="card-tag">Applied ML</span>
+        <h3>Image Classifier — Cat or Cow</h3>
+        <div class="stack">
+          <span class="chip">Teachable Machine</span>
+          <span class="chip">Python</span>
+        </div>
+        <p>
+          An image classification model trained with Google's Teachable Machine, paired with a
+          Python inference script, built as part of summer training.
+        </p>
+        <a class="card-link" href="https://github.com/anhar-ot/image-classifier-teachable-machine" target="_blank" rel="noopener">View repository &rarr;</a>
+      </div>
+
+      <div class="card">
+        <span class="card-tag">Mechanical Design</span>
+        <h3>Quadruped Robot — Preliminary Design</h3>
+        <div class="stack">
+          <span class="chip">Mechanical Design</span>
+          <span class="chip">Report</span>
+        </div>
+        <p>
+          A preliminary, design-only mechanical study for a quadruped ("robot dog") robot, covering
+          structure and reference geometry ahead of any physical build.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="pad" data-pad></div>
+  <section id="education">
+    <span class="designator" data-designator>U4 — EDUCATION</span>
+    <h2>Education</h2>
+    <div class="edu-item">
+      <div>
+        <h3>B.Sc. Computer Engineering</h3>
+        <p>Qassim University</p>
+      </div>
+      <span class="edu-meta">Final Year — In Progress</span>
+    </div>
+  </section>
+
+  <div class="pad" data-pad></div>
+  <footer id="contact">
+    <span class="designator" data-designator>U5 — CONTACT</span>
+    <p class="eyebrow">Pads // Open for connections</p>
+    <h2>Contact</h2>
+    <p style="color:var(--ink-dim); max-width:52ch;">
+      Feel free to reach out about internships, collaboration, or anything embedded systems related.
+    </p>
+    <div class="contact-grid">
+      <a class="pad-link" href="mailto:anhar0iu@gmail.com">anhar0iu@gmail.com</a>
+      <a class="pad-link" href="https://github.com/anhar-ot" target="_blank" rel="noopener">github.com/anhar-ot</a>
+      <a class="pad-link" href="https://www.linkedin.com/in/anhar-alotaibi-8971aa377" target="_blank" rel="noopener">linkedin.com/in/anhar-alotaibi</a>
+    </div>
+    <p class="footer-note">// EOF — built with care, one trace at a time.</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var railFill = document.getElementById('railFill');
+  var rail = document.querySelector('.rail');
+  var pads = document.querySelectorAll('[data-pad]');
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function positionPads(){
+    var railTop = rail.getBoundingClientRect().top + window.scrollY;
+    var sections = document.querySelectorAll('.schematic > section, .schematic > footer');
+    pads.forEach(function(pad, i){
+      var target = sections[i];
+      if(!target) return;
+      var top = target.getBoundingClientRect().top + window.scrollY - railTop;
+      pad.style.top = top + 'px';
+      var designator = target.querySelector('[data-designator]');
+      if(designator){ designator.style.top = top + 'px'; }
+    });
+  }
+
+  function updateFill(){
+    var railRect = rail.getBoundingClientRect();
+    var railTop = railRect.top + window.scrollY;
+    var railHeight = rail.offsetHeight;
+    var progress = (window.scrollY + window.innerHeight * 0.5 - railTop) / railHeight;
+    progress = Math.max(0, Math.min(1, progress));
+    railFill.style.height = (progress * 100) + '%';
+
+    pads.forEach(function(pad){
+      var padTop = parseFloat(pad.style.top || 0);
+      if(railTop + padTop < window.scrollY + window.innerHeight * 0.5){
+        pad.classList.add('lit');
+      } else {
+        pad.classList.remove('lit');
+      }
+    });
+  }
+
+  var ticking = false;
+  function onScroll(){
+    if(!ticking){
+      window.requestAnimationFrame(function(){
+        updateFill();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }
+
+  window.addEventListener('load', function(){
+    positionPads();
+    updateFill();
+  });
+  window.addEventListener('resize', function(){
+    positionPads();
+    updateFill();
+  });
+  window.addEventListener('scroll', onScroll, {passive:true});
+
+  if(reduced){
+    railFill.style.height = '100%';
+    pads.forEach(function(p){ p.classList.add('lit'); });
+  }
+})();
+</script>
+
+</body>
+</html>
